@@ -5,11 +5,18 @@ import {
   Center,
   Text,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import Head from "next/head";
 import React from "react";
+import useUser from "../hooks/useUser";
 
-export default function Home() {
+function Home() {
+  const { login, user } = useUser();
+
+  // @todo: Use Web3 signed message
+  const handleConnect = () => login("bla");
+  
   return (
     <Box
       pt={{ base: "6rem", md: "8rem" }}
@@ -27,14 +34,30 @@ export default function Home() {
           </Heading>
         </Center>
         <Text mt="4" opacity="0.75">
-          Yada yada yada
+          {JSON.stringify(user)}
         </Text>
         <Center mt="4">
-          <Button size="lg" as="a" fontSize="1.3rem" h="3.5rem">
-            Login
-          </Button>
+          {!user || !user.isLoggedIn ? (
+            <Button
+              size="lg"
+              as="a"
+              fontSize="1.3rem"
+              h="3.5rem"
+              onClick={handleConnect}
+            >
+              Connect
+            </Button>
+          ) : (
+            <Link href="/secret">
+              <Button size="lg" as="a" fontSize="1.3rem" h="3.5rem">
+                View Secret
+              </Button>
+            </Link>
+          )}
         </Center>
       </Container>
     </Box>
   );
 }
+
+export default Home;
